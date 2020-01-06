@@ -71,7 +71,7 @@ export default {
           return `<code>${contentItem.text}</code>`;
         case 'link':
           // this might not work becuse of the :config...
-          return `<dynamic-link :config='${contentItem.marks[0].attrs}'>${contentItem.text}</dynamic-link>`;
+          return `<a href='${contentItem.marks[0].attrs.href}'>${contentItem.text}</a>`;
         default:
           return '';
       }
@@ -86,7 +86,7 @@ export default {
       if(containsCode) {
         return `<code>${contentItem.text}</code>`;
       } else if (linkObj) {
-        return `<dynamic-link :config='${linkObj}'>${contentItem.text}</dynamic-link>`;
+        return `<a href='${linkObj.href}'>${contentItem.text}</a>`;
       } else {
         return `<span class="${classStr}"></span>`
       }
