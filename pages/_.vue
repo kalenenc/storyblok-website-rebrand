@@ -24,6 +24,7 @@ const loadData = function({api, cacheVersion, errorCallback, version, path}) {
 
 export default {
   data () {
+    // How we return what the story content data is and pass it down to child components
     return { story: { content: {} } }
   },
   mounted () {
@@ -53,7 +54,7 @@ export default {
     }
 
     let version = editMode ? 'draft' : 'published'
-    let path = context.route.path == '/' ? 'home' : context.route.path
+    let path = context.route.path == '/' ? '/home' : context.route.path
 
     // Load the JSON from the API
     return loadData({

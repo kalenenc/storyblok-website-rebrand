@@ -1,6 +1,6 @@
 <template>
-  <div v-editable="blok" class="column feature">
-    {{ blok.name }}
+  <div>
+    hello from footer
   </div>
 </template>
 
