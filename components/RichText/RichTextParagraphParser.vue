@@ -1,21 +1,5 @@
 <template>
-  <div>
-
     <p v-html="buildElement(content)"></p>
-
-    <!-- <h1>Hello from Rich Text Paragraph Parser</h1>
-
-    <p>This should be an array:</p>
-    <p>{{buildElement(content)}}</p> -->
-
-    <!-- It's going to be at least 2 different types... either an image or text -->
-
-    <!-- <template v-for="(obj, index) in content.content">
-    
-
-    </template> -->
-    
-  </div>
 </template>
 
 <style>
@@ -33,22 +17,16 @@
 }
 
 
-
 </style>
 
 <script>
 
 import DynamicLink from '../DynamicLink.vue'
 
-
 export default {
   props: ['content'], // an array
   components: {
     DynamicLink
-  },
-
-  mounted(){
-    //this.buildElement(this.$props.content);
   },
 
   methods: {
@@ -70,7 +48,6 @@ export default {
         case 'code':
           return `<code>${contentItem.text}</code>`;
         case 'link':
-          // this might not work becuse of the :config...
           return `<a href='${contentItem.marks[0].attrs.href}'>${contentItem.text}</a>`;
         default:
           return '';
@@ -93,9 +70,7 @@ export default {
     },
 
     handleText(contentItem) {
-      // 3. If it's text, check to see if there are any marks
       return contentItem.marks ? this.handleMarks(contentItem) : contentItem.text
-      // 4. If there are any marks, see what they are
     },
 
     handleMarks(contentItem) {
@@ -105,28 +80,20 @@ export default {
     },
 
     buildElement(contentArray) {
-      // 1. Loop through all the different content types
       let el = '';
       contentArray.forEach((contentItem)=> {
-        // 2. Check if it's text or image
-
         if (contentItem.type === 'text') {
           const content = this.handleText(contentItem);
-          // console.log(`<p>${content}</p>`)
-          // return `content`
           el += content;
-
         } 
-        
-        // else if(contentItem.type === 'image') {
-
-        // } else {
-        //   return '';
-        // }
+        else if(contentItem.type === 'image') {
+          el += `<img src="${contentItem.attrs.src}" alt="${contentItem.attrs.alt}"></img>`
+        } else {
+          return '';
+        }
 
 
       })
-      console.log('el', el)
       return el
 
     }
