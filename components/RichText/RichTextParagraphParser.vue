@@ -1,5 +1,22 @@
 <template>
+  <div>
+     <!-- If has marks: -->
+    <rich-text-marks-parser>
+
+    </rich-text-marks-parser>
+
+    <!-- Else: -->
+
+
     <p v-html="buildElement(content)"></p>
+    <!-- Maybe we can add a slot in here for our marks component? -->
+    <rich-text-marks-parser>
+
+    </rich-text-marks-parser>
+
+  </div>
+
+   
 </template>
 
 <style>
@@ -29,6 +46,7 @@ export default {
     DynamicLink
   },
 
+
   methods: {
 
     handleImage() {
@@ -54,7 +72,16 @@ export default {
       }
     },
 
+
+    // combine methods
     handleMultipleMarks(contentItem) {
+
+      const isSpanClass = ((markType) => markType === 'bold' || markType === 'underline' || markType === 'italic' )
+      const isSemanticElement = ((markType) => markType === 'strike' || markType === 'code' || markType === 'link')
+      const classMarks = contentItem.marks.filter((mark) => isSpanClass(mark.type))
+
+
+
       const linkObj = contentItem.marks.find((mark) => mark.type === 'link')
       const containsCode = contentItem.marks.some((mark) => mark.type === 'code')
       const classArr = contentItem.marks.map((mark) => (mark.type !== 'link' && mark.type !== 'code') ? mark.type : '')
@@ -70,8 +97,13 @@ export default {
     },
 
     handleText(contentItem) {
+
+      // could just do a conditional here to check if contentItem.marks exists,
+        // if so, run handleMultipleMarks()
+
       return contentItem.marks ? this.handleMarks(contentItem) : contentItem.text
     },
+
 
     handleMarks(contentItem) {
       return contentItem.marks.length < 2 
