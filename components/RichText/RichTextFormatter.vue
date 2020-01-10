@@ -3,12 +3,15 @@
     <ul>
       <template v-for="(obj, index) in blurb.content">
 
-        <template v-if="obj.type === 'paragraph'">
+
+        <!-- Maybe we can lump paragraph, heading, bullet list, ordered list, and blok quote together -->
+
+        <template v-if="containsText(obj.type)">
           {{obj}}
-          <rich-text-paragraph-parser 
+          <rich-text-parser 
             :content="obj.content" 
             :key="index">
-          </rich-text-paragraph-parser>
+          </rich-text-parser>
         </template>
 
         <template v-else-if="obj.type === 'heading'">
@@ -19,10 +22,6 @@
         </template>
 
         <!-- <template v-if="obj.type === 'code_block'">
-          <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
-        </template>
-
-        <template v-else-if="obj.type === 'heading'">
           <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
         </template>
 
@@ -59,12 +58,12 @@
 
 <script>
 
-import RichTextParagraphParser from './RichTextParagraphParser.vue'
+import RichTextParser from './RichTextParser.vue'
 
 export default {
   props: ['blurb'],
   components: {
-    RichTextParagraphParser
+    RichTextParser
   },
 
   computed: {
@@ -72,6 +71,12 @@ export default {
   },
 
   methods: {
+
+    containsText(textType) {
+      // Maybe we can lump paragraph, heading, bullet list, ordered list, and blok quote together 
+      return textType === 'paragraph' || textType === 'heading' || textType === 'code_block' || textType === 'bullet_list' || textType === 'ordered_list' || textType === 'blockquote'
+    },
+
     determineHeading(obj) {
       // @TODO: Going to need to handle scenario where heading has marks on it... might need to abstract that out from
       // the paragraph parser component

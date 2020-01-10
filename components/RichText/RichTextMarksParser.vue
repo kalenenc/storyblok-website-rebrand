@@ -1,5 +1,9 @@
 <template>
-    <p v-html="returnMarkElement(contentItem)"></p>
+  <div>
+    <span>
+        <template v-html="returnMarkElement(contentItem)"></template>
+    </span>
+  </div>
 </template>
 
 <style>
