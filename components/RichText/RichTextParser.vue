@@ -1,11 +1,44 @@
 <template>
   <div>
 
-    <template v-if="content.type === 'paragraph'">
-      <p v-html="buildElement(content)"></p>
+    <!-- 
+      Steps:
+        1. See what paragraph, heading, bullet_list, ordered_list, blockquote have in common
+        2. Now think of all the marks, etc that will be included with it...
+            - code
+            - link
+            - span - bold, underline, italics, strike
+        3. Add your marks as needed
+        4. Separate out into smaller components as needed
+    --> 
+    <template v-if="contentObj.type === 'paragraph'">
+      
+      <p>
+        <template v-for="(contentItem, index) in contentObj.content">
+          <!-- It's either going to give back span, code, link or nothing -->
+          <template v-if="contentItem.marks">
+            <rich-text-marks-parser :contentItem="contentItem" :key="index">
+            </rich-text-marks-parser>
+          </template>
+          
+          <template v-else>
+            {{contentItem.text}}
+          </template>
+        </template>
+      </p>
+      
+      <!-- 
+        1. Loop through the content array - content: [{}, {}, {}] 
+        2. Determine if the type is a text
+        3. If it's text, send it to the rich text marks parser element
+        4. If it's an image... well, you probably should do the same thing, just need to handle the image scenario from
+        within the RichTextMarksParserComponent
+      
+      -->
+      <!-- <p v-html="buildElement(content)"></p> -->
     </template>
 
-    <template v-if="content.type === 'heading'">
+    <!-- <template v-if="content.type === 'heading'">
       <p v-html="buildElement(content)"></p>
     </template>
 
@@ -19,20 +52,12 @@
 
     <template v-if="content.type === 'blockquote'">
       <p v-html="buildElement(content)"></p>
-    </template>
+    </template>       -->
 
-
-     <!-- If has marks: -->
-      
-
-    <!-- Else: -->
-
-
-    <!-- Maybe we can add a slot in here for our marks component? -->
 
   </div>
 
-   
+
 </template>
 
 <style>
@@ -43,7 +68,7 @@
 import DynamicLink from '../DynamicLink.vue'
 
 export default {
-  props: ['content'], // an array
+  props: ['contentObj'],
   components: {
     DynamicLink
   },

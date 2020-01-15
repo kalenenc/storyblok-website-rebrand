@@ -1,9 +1,10 @@
 <template>
-  <div>
-    <span>
-        <template v-html="returnMarkElement(contentItem)"></template>
-    </span>
-  </div>
+
+    <span v-html="returnMarkedText(contentItem)"></span>
+
+    <!-- <component :is="newTemplate"></component> -->
+
+    
 </template>
 
 <style>
@@ -20,6 +21,10 @@
   font-style: italic;
 }
 
+.strike {
+  text-decoration: line-through;
+}
+
 
 </style>
 
@@ -33,62 +38,79 @@ export default {
     DynamicLink
   },
 
+  data() {
+    return {
+      newTemplate: ''
+    }
+  },
+
+  mounted() {
+    this.returnMarkedText(this.$props.contentItem)
+  },
+
+  computed: {
+    dynamicComponent() {
+      return {
+        template: this.newTemplate,
+        // methods: {
+        //   someAction() {
+        //     console.log("Action!");
+        //   }
+        // }
+      }
+    }
+  },
+
   methods: {
 
     parseMarks() {
       let classArr = [];
-      let linkHref, isStrike, isCode;
-      contentItem.marks.forEach((mark) => {
-        switch(mark.type) {
-        case 'link':
-          linkHref = mark.attrs.href; // Might need to change later to just sending back entire object
-          break;
-        case 'code':
-          isCode = true
-          break; 
-        case 'strike':
-          isStrike = true;
-          break;
-        default:
-          classArr.push(mark.type)
+      let linkHref, isCode;
+
+      // check if there's marks
+
+      if(this.$props.contentItem.marks) {
+        this.$props.contentItem.marks.forEach((mark) => {
+          switch(mark.type) {
+            case 'link':
+              linkHref = mark.attrs.href; // Might need to change later to just sending back entire object
+              break;
+            case 'code':
+              isCode = true
+              break; 
+            default:
+              classArr.push(mark.type);
+              break;
+          }
+        })
+
+        const classStr = classArr.join(' ');
+        return {
+          classStr,
+          linkHref,
+          isCode,
+          contentItem: this.$props.contentItem
         }
-      })
-
-      const classStr = classArr.join(' ');
-
-      return {
-        classStr,
-        linkHref,
-        isStrike,
-        isCode,
-        contentItem
-      }
+      } 
     },
 
     parseMarkObj(markObj) {
-      const isLinkWithStrike = linkHref && isStrike;
-      // link with strike
-      if(isLinkWithStrike) {
-        return `<strike class="${classStr}">
-                  <a href="${linkHref}">${contentItem.text}</a>
-                </strike>`;
-      // Just a strike
-      } else if(isStrike) {
-        return `<strike class="${classStr}">${contentItem.text}</strike>`;
-      // Inline code
-      } else if(isCode) {
-        return `<code>${contentItem.text}</code>`
-      // Just a regular link
-      } else if(linkHref) {
-        `<a class="${classStr}" href="${linkHref}">${contentItem.text}</a>`
-      // Just a span
-      } else { // Just a regular link
-        return `<span class="${classStr}">${contentItem.text}</span>`
-      }
+      
+        if(markObj.isCode) {
+          // this.newTemplate = `<code>${markObj.contentItem.text}</code>`
+          return `<code>${markObj.contentItem.text}</code>`
+        } else if(markObj.linkHref) {
+          //this.newTemplate = `<a class="${markObj.classStr}" href="${markObj.linkHref}">${markObj.contentItem.text}</a>`
+          return `<a class="${markObj.classStr}" href="${markObj.linkHref}">${markObj.contentItem.text}</a>`
+        } else {
+          //this.newTemplate = `<span class="${markObj.classStr}">${markObj.contentItem.text}</span>`
+          return `<span class="${markObj.classStr}">${markObj.contentItem.text}</span>`
+        }
+
     },
 
     // Will render the html
-    returnMarkElement(contentItem) {
+    returnMarkedText(contentItem) {
       const markObj = this.parseMarks(contentItem);
       const element = this.parseMarkObj(markObj)
       return element;
