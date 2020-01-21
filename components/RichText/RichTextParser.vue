@@ -16,8 +16,10 @@
       <p>
         <template v-for="(contentItem, index) in contentObj.content">
           <!-- It's either going to give back span, code, link or nothing -->
+
           <template v-if="contentItem.marks">
-            <rich-text-marks-parser :contentItem="contentItem" :key="index">
+            <rich-text-marks-parser :marksArray="contentItem.marks" :key="index">
+              {{contentItem.text}}
             </rich-text-marks-parser>
           </template>
           
