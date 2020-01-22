@@ -15,17 +15,15 @@
       
       <p>
         <template v-for="(contentItem, index) in contentObj.content">
-          <!-- It's either going to give back span, code, link or nothing -->
-
-          <template v-if="contentItem.marks">
-            <rich-text-marks-parser :marksArray="contentItem.marks" :key="index">
-              {{contentItem.text}}
-            </rich-text-marks-parser>
-          </template>
-          
-          <template v-else>
-            {{contentItem.text}}
-          </template>
+          <!-- This took me forever to figure out, but apparently the way
+          Vue is written, all of these class variables need to be 
+          on the same line as the opening and closing tag. Otherwise,
+          there is whitespace issues. -->
+            <rich-text-marks-parser 
+              v-if="contentItem.marks" 
+              :marksArray="contentItem.marks" 
+              :key="index">{{contentItem.text}}</rich-text-marks-parser>
+          <template v-else>{{contentItem.text}}</template>
         </template>
       </p>
       

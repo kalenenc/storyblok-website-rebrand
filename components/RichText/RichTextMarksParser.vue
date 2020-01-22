@@ -34,6 +34,7 @@ export default {
   render(createElement) {
 
     this.setMarkedText();
+    console.log('this.$slots.default', this.$slots.default)
 
     return createElement(
       this.elementType,
