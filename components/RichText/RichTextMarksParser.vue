@@ -1,3 +1,14 @@
+<template>
+  <component 
+    :is="elementType" 
+    :class="classStr" 
+    :href="linkHref"
+    :to="toLocation"
+    >
+    <slot></slot>
+  </component>
+</template>
+
 <style>
 .bold {
   font-weight: bold;
@@ -18,79 +29,56 @@
 
 <script>
 
-
 export default {
-  props: ['marksArray'], // an object
-  components: {},
+  props: ['marksArray'], 
 
   data() {
     return {
-      elementType: '',
+      elementType: 'span',
       classStr: '',
-      linkHref: ''
+      linkHref: null,
+      toLocation: null
     }
   },
 
-  render(createElement) {
-
-    this.setMarkedText();
-    console.log('this.$slots.default', this.$slots.default)
-
-    return createElement(
-      this.elementType,
-      {
-        attrs: {
-          href: this.linkHref || null
-        },
-        class: {
-          [this.classStr]: this.classStr
-        }
-      },
-      this.$slots.default // array of children
-    )
+  mounted() {
+    this.parseMarks();
   },
 
   methods: {
+
+    getLinkType(linkType) {
+      return linkType === 'url' ? 'a' : 'nuxt-link'
+    },
+
+    getElementType(mark) {
+      return mark.type === 'code'
+        ? 'code'
+        : mark.type === 'link'
+          ? this.getLinkType(mark.attrs.linktype)
+          : this.elementType
+    },
+
+    setAnchor(mark) {
+      if(this.elementType === 'nuxt-link') {
+        const isMarks = mark && mark.attrs && mark.attrs.href;
+        this.toLocation = isMarks ? mark.attrs.href : this.toLocation
+        this.linkHref = this.toLocation;
+      } else if(this.elementType === 'a') {
+        this.linkHref = mark.attrs.href;
+      } 
+    },
+
     parseMarks() {
       let classArr = [];
-      let linkHref, isCode;
 
       this.$props.marksArray.forEach((mark) => {
-        switch(mark.type) {
-          case 'link':
-            this.linkHref = mark.attrs.href; // Might need to change later to just sending back entire object
-            break;
-          case 'code':
-            isCode = true
-            break; 
-          default:
-            classArr.push(mark.type);
-            break;
-        }
+        this.elementType = this.getElementType(mark);
+        this.setAnchor(mark);
+        const isStyledEl = mark.type !== 'link' && mark.type !== 'code'
+        if (isStyledEl) classArr.push(mark.type);
       })
-
-      const classStr = classArr.join(' ');
-      return {
-        classStr,
-        isCode,
-      }
-    },
-
-    parseMarkObj(markObj) {
-      if(markObj.isCode) {
-        this.elementType = 'code';
-      } else if(this.linkHref) {
-        this.elementType = 'a';
-        this.classStr = `${markObj.classStr}`;
-      } else {
-        this.elementType = 'span';
-        this.classStr = `${markObj.classStr}`;
-      }
-    },
-
-    setMarkedText() {
-      const markObj = this.parseMarks();
-      this.parseMarkObj(markObj)
+      this.classStr = classArr.join(' ');
     },
 
   }
