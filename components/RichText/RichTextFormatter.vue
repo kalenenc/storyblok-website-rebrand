@@ -78,7 +78,6 @@ export default {
   methods: {
 
     containsText(textType) {
-      console.log('hello from contains text')
       // Maybe we can lump paragraph, heading, bullet list, ordered list, and blok quote together 
       return textType === 'paragraph' || textType === 'heading' || textType === 'code_block' || textType === 'bullet_list' || textType === 'ordered_list' || textType === 'blockquote'
     },
@@ -89,7 +88,6 @@ export default {
       // <!-- { "type": "heading", "attrs": { "level": 1 }, "content": [ { "text": "this is a heading", "type": "text" } ] } -->
       const level = obj.attrs.level
       const heading = `<h${level}></h${level}>`
-      console.log('heading', heading)
       return heading
     }
   }

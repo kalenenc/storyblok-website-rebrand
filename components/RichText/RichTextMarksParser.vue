@@ -25,7 +25,7 @@ export default {
 
   data() {
     return {
-      elementType: '',
+      elementType: 'span',
       classStr: '',
       linkHref: ''
     }
@@ -33,8 +33,7 @@ export default {
 
   render(createElement) {
 
-    this.setMarkedText();
-    console.log('this.$slots.default', this.$slots.default)
+    this.parseMarks();
 
     return createElement(
       this.elementType,
@@ -58,39 +57,18 @@ export default {
       this.$props.marksArray.forEach((mark) => {
         switch(mark.type) {
           case 'link':
+            this.elementType = 'a';
             this.linkHref = mark.attrs.href; // Might need to change later to just sending back entire object
             break;
           case 'code':
-            isCode = true
+            this.elementType = 'code';
             break; 
           default:
             classArr.push(mark.type);
             break;
         }
       })
-
-      const classStr = classArr.join(' ');
-      return {
-        classStr,
-        isCode,
-      }
-    },
-
-    parseMarkObj(markObj) {
-      if(markObj.isCode) {
-        this.elementType = 'code';
-      } else if(this.linkHref) {
-        this.elementType = 'a';
-        this.classStr = `${markObj.classStr}`;
-      } else {
-        this.elementType = 'span';
-        this.classStr = `${markObj.classStr}`;
-      }
-    },
-
-    setMarkedText() {
-      const markObj = this.parseMarks();
-      this.parseMarkObj(markObj)
+      this.classStr = classArr.join(' ');
     },
 
   }
