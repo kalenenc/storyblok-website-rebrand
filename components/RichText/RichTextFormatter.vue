@@ -1,7 +1,6 @@
 <template>
   <div class="richTextFormatter">
     <template v-for="(obj, index) in blurb.content">
-
       <!-- Heading or paragraph -->
       <template v-if="isHeadingOrParagraph(obj)">
         <rich-text-parser 
@@ -9,48 +8,37 @@
           :contentItem="obj" 
           :key="index"></rich-text-parser>
       </template>
-
       <!-- List item -->
       <template v-else-if="isList(obj)">
         <rich-list-parser 
           :listObj="obj" 
           :key="index"></rich-list-parser>
       </template>
-      
-
       <!-- Block quote -->
       <template v-else-if="obj.type === 'blockquote'">
         <!-- Do a check for paragraph or heading (later image) -->
-
-
         <!-- Code block -->
-
         <!-- HR -->
-
         <!-- Block eventually -->
-  
       </template>     
-
       <!-- <template v-else-if="obj.type === 'blok'">
         <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
       </template>
       -->
-
     </template>
-    
-
-  
   </div>
 </template>
 
 <script>
 
 import RichTextParser from './RichTextParser.vue'
+import RichListParser from './RichListParser.vue'
 
 export default {
   props: ['blurb'],
   components: {
-    RichTextParser
+    RichTextParser,
+    RichListParser
   },
 
   computed: {
