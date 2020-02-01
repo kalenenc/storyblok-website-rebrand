@@ -1,34 +1,39 @@
 <template>
-  <!-- @TODO: Remove this div -->
-  <component :is="determineTextType(contentItem)">
-    <template v-for="(textItem, index) in contentItem.content">
-      <rich-text-marks-parser 
-        v-if="textItem.marks"
-        :key="index" 
-        :marksArray="textItem.marks">
-      </rich-text-marks-parser>
-      <template v-else>{{textItem.text}}</template>
+  <component :is="determineListType(listObj)">
+    <template v-for="(listItem, index) in listObj.content">
+      <li :key="index">
+        <template v-for="(contentItem) in listItem.content">
+          <template v-for="(paragraphItem, index2) in contentItem.content">
+            <rich-text-marks-parser 
+              v-if="paragraphItem.marks"
+              :key="index2" 
+              :marksArray="paragraphItem.marks">
+            </rich-text-marks-parser>
+            <template v-else>{{paragraphItem.text}}</template>
+          </template> 
+        </template>
+      </li>
     </template>
   </component>
-
+  
 </template>
-
-<style>
-</style>
 
 <script>
 
 import RichTextMarksParser from './RichTextMarksParser.vue'
 
-
 export default {
-  props: ['contentItem'],
+  props: ['listObj'],
   components: {
     RichTextMarksParser
   },
 
+  computed: {
+
+  },
 
   methods: {
+
 
     handleImage() {
 
@@ -75,21 +80,11 @@ export default {
       })
       return el
     }
+
+    
+
   }
 
-  // Steps:
-  // 1. Loop through all the different content types
-  // 2. Check if it's text or image
-  // 3. If it's text, check to see if there are any marks
-  // 4. If there are any marks, see what they are
-  // 5. Make a case statment for the following marks:
-        // - bold <span class="bold"></span>
-        // - italics <span class="italic"></span>
-        // - underline <span class="underline"></span>
-        // - inline code <code></code>
-        // - link <a href=""></a>
-        // - all of the above, or a mixture of any of them
-  // 6. Append them all and spit out the final result
 
 }
 </script>

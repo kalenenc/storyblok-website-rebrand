@@ -7,6 +7,7 @@ import ContactForm from '~/components/ContactForm.vue'
 import RichTextFormatter from '~/components/RichText/RichTextFormatter.vue'
 import RichTextMarksParser from '~/components/RichText/RichTextMarksParser.vue'
 import RichTextParser from '~/components/RichText/RichTextParser.vue'
+import RichListParser from '~/components/RichText/RichListParser.vue'
 import DynamicLink from '~/components/DynamicLink.vue'
 
 // Internal Components
@@ -16,6 +17,7 @@ Vue.component('rich-text-formatter', RichTextFormatter)
 Vue.component('rich-text-marks-parser', RichTextMarksParser)
 Vue.component('rich-text-parser', RichTextParser)
 Vue.component('dynamic-link', DynamicLink)
+Vue.component('rich-list-parser', RichListParser);
 
 // Storyblok components
 Vue.component('blok-default--page', DefaultPage)

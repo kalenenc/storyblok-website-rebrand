@@ -24,7 +24,7 @@
 
 
 export default {
-  props: ['marksArray'], // an object
+  props: ['marksArray'],
   components: {},
 
   data() {
