@@ -11,21 +11,7 @@
         3. Add your marks as needed
         4. Separate out into smaller components as needed
     --> 
-    <template v-if="contentObj.type === 'paragraph'">
       
-      <p>
-        <template v-for="(contentItem, index) in contentObj.content">
-          <!-- This took me forever to figure out, but apparently the way
-          Vue is written, all of these class variables need to be 
-          on the same line as the opening and closing tag. Otherwise,
-          there is whitespace issues. -->
-            <rich-text-marks-parser 
-              v-if="contentItem.marks" 
-              :marksArray="contentItem.marks" 
-              :key="index">{{contentItem.text}}</rich-text-marks-parser>
-          <template v-else>{{contentItem.text}}</template>
-        </template>
-      </p>
       
       <!-- 
         1. Loop through the content array - content: [{}, {}, {}] 
@@ -35,23 +21,25 @@
         within the RichTextMarksParserComponent
       
       -->
-      <!-- <p v-html="buildElement(content)"></p> -->
-    </template>
 
-    <!-- <template v-if="content.type === 'heading'">
-      <p v-html="buildElement(content)"></p>
-    </template>
+    <!-- Get the heading number -->
+      <component :is="determineTextType(contentObj)">
+        <template v-for="(contentItem, index) in contentObj.content">
+          <rich-text-marks-parser 
+             v-if="contentItem.marks" 
+            :marksArray="contentItem.marks" 
+            :key="index">{{contentItem.text}}</rich-text-marks-parser>
+        <template v-else>{{contentItem.text}}</template>
+        </template>
+      </component>
 
-    <template v-if="content.type === 'bullet_list'">
-      <p v-html="buildElement(content)"></p>
-    </template>
 
-    <template v-if="content.type === 'ordered_list'">
-      <p v-html="buildElement(content)"></p>
-    </template>
+    <!-- <template v-if="contentObj.type === 'ordered_list'">
+      <p v-html="buildElement(contentObj)"></p>
+    </template> -->
 
-    <template v-if="content.type === 'blockquote'">
-      <p v-html="buildElement(content)"></p>
+    <!-- <template v-if="contentObj.type === 'blockquote'">
+      <p v-html="buildElement(contentObj)"></p>
     </template>       -->
 
 
@@ -78,6 +66,25 @@ export default {
 
     handleImage() {
 
+    },
+
+    determineTextType(contentObj) {
+      // Determine if paragraph or heading
+      console.log(contentObj.type)
+      if(contentObj.type === 'heading') {
+        console.log('made it here')
+        return this.getHeading(contentObj.attrs.level)
+      } else if(contentObj.type === 'paragraph') {
+          return 'p'
+      // @todo: make another condition for bullet list, etc
+      } else if(contentObj.type === 'bullet_list') {
+        return 'ul'
+      }
+    },
+
+
+    getHeading(num) {
+      return `h${num}`;
     },
 
     handleText(contentItem) {

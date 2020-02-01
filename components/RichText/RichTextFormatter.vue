@@ -2,56 +2,28 @@
   <div>
     <ul>
       <template v-for="(obj, index) in blurb.content">
-
-
-        <!-- Maybe we can lump:
+            <!-- Maybe we can lump:
             - paragraph
             - heading
             - bullet list
             - ordered list
             - blockquote 
-
           ... together -->
-
         <template v-if="containsText(obj.type)">
           <rich-text-parser 
             :contentObj="obj" 
             :key="index">
           </rich-text-parser>          
         </template>
-
-        <template v-else-if="obj.type === 'heading'">
-          <!-- { "type": "heading", "attrs": { "level": 1 }, "content": [ { "text": "this is a heading", "type": "text" } ] } -->
-          <template v-html="determineHeading(obj)"></template>
-          <!-- <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph> -->
-        </template>
-
-        <!-- <template v-if="obj.type === 'code_block'">
-          <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
-        </template>
-
-        <template v-else-if="obj.type === 'bullet_list'">
-          <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
-        </template>
-
-        <template v-else-if="obj.type === 'ordered_list'">
-          <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
-        </template>
-
-        <template v-else-if="obj.type === 'blockquote'">
-          <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
-        </template>
-
         <template v-else-if="obj.type === 'horizontal_rule'">
           <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
         </template>
 
+
         <template v-else-if="obj.type === 'blok'">
           <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
         </template>
-
         
- -->
 
       </template>
     </ul>

@@ -7,6 +7,10 @@
   text-decoration: underline;
 }
 
+.underline.strike {
+  text-decoration: underline line-through;
+}
+
 .italic {
   font-style: italic;
 }
