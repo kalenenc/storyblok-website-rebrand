@@ -1,12 +1,12 @@
 <template>
   <!-- @TODO: Remove this div -->
   <component :is="determineTextType(contentItem)">
+
     <template v-for="(textItem, index) in contentItem.content">
       <rich-text-marks-parser 
         v-if="textItem.marks"
         :key="index" 
-        :marksArray="textItem.marks">
-      </rich-text-marks-parser>
+        :marksArray="textItem.marks">{{textItem.text}}</rich-text-marks-parser>
       <template v-else>{{textItem.text}}</template>
     </template>
   </component>

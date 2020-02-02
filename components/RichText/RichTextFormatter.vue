@@ -1,30 +1,40 @@
 <template>
   <div class="richTextFormatter">
     <template v-for="(obj, index) in blurb.content">
+
       <!-- Heading or paragraph -->
       <template v-if="isHeadingOrParagraph(obj)">
         <rich-text-parser 
-          v-if="isHeadingOrParagraph(obj)"
           :contentItem="obj" 
           :key="index"></rich-text-parser>
       </template>
+
       <!-- List item -->
       <template v-else-if="isList(obj)">
         <rich-list-parser 
           :listObj="obj" 
           :key="index"></rich-list-parser>
       </template>
-      <!-- Block quote -->
+
+      <template v-else-if="obj.type === 'horizontal_rule'">
+        <hr /> 
+      </template>
+
       <template v-else-if="obj.type === 'blockquote'">
+        <p>hi this is a block quote</p>
         <!-- Do a check for paragraph or heading (later image) -->
         <!-- Code block -->
         <!-- HR -->
         <!-- Block eventually -->
-      </template>     
+      </template>
+
+     
+      
       <!-- <template v-else-if="obj.type === 'blok'">
         <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
-      </template>
-      -->
+      </template> -->
+
+
     </template>
   </div>
 </template>

@@ -7,8 +7,7 @@
             <rich-text-marks-parser 
               v-if="paragraphItem.marks"
               :key="index2" 
-              :marksArray="paragraphItem.marks">
-            </rich-text-marks-parser>
+              :marksArray="paragraphItem.marks">{{paragraphItem.text}}</rich-text-marks-parser>
             <template v-else>{{paragraphItem.text}}</template>
           </template> 
         </template>
