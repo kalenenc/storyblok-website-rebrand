@@ -34,18 +34,7 @@ export default {
 
     },
 
-    // @TODO: Eventually figure out how to get images passed in here too
-    isHeadingOrParagraph(contentObj) {
-      return contentObj.type === 'paragraph' || contentObj.type === 'heading';
-    },
 
-    determineListType(contentObj){
-      return contentObj.type === 'bullet_list' ? 'ul' : 'ol';
-    },
-
-    isList(contentObj) {
-      return contentObj.type === 'ordered_list' || contentObj.type === 'bullet_list';
-    },
 
     determineTextType(contentObj) {
       // Determine if paragraph or heading
