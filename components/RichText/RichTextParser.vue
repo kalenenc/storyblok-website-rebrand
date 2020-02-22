@@ -1,11 +1,9 @@
 <template>
-  <div>
 
     <!-- @TODO: See about potentially separating this out to another component where
     we don't need so much template logic for checking paragraph, heading, etc -->
 
-    <template v-if="contentObj.type === 'paragraph'">
-      <p>
+      <p v-if="contentObj.type === 'paragraph'">
         <template v-for="(contentItem, index) in contentObj.content">
           <!-- This took me forever to figure out, but apparently the way
           Vue is written, all of these class variables need to be 
@@ -18,11 +16,19 @@
           <template v-else>{{contentItem.text}}</template>
         </template>
       </p>
-    </template>
 
-    <template v-else-if="contentObj.type === 'heading'">
-      <h1>{{contentObj}}</h1>
-    </template>
+      <component v-else-if="contentObj.type === 'heading'" :is="getHeading(contentObj.attrs.level)">
+        <template v-for="(contentItem, index) in contentObj.content">
+          <rich-text-marks-parser 
+            v-if="contentItem.marks" 
+            :marksArray="contentItem.marks" 
+            :key="index">{{contentItem.text}}</rich-text-marks-parser>
+          <template v-else>{{contentItem.text}}</template>
+        </template>
+      </component>
+
+    <!-- TODO: decide if we want to move the lists out of here and put if statements in the
+    rich text formatter file -->
 
     <!-- <template v-if="contentObj.type === 'bullet_list'">
       <p v-html="buildElement(contentObj)"></p>
@@ -37,7 +43,6 @@
     </template>       -->
 
 
-  </div>
 
 
 </template>
@@ -55,32 +60,12 @@ export default {
     DynamicLink
   },
 
-
   methods: {
 
-    handleImage() {
-
+    getHeading(level) {
+      return `h${level}`;
     },
 
-    handleText(contentItem) {
-      return contentItem.marks ? this.handleMarks(contentItem) : contentItem.text
-    },
-
-    buildElement(contentArray) {
-      let el = '';
-      contentArray.forEach((contentItem)=> {
-        if (contentItem.type === 'text') {
-          const content = this.handleText(contentItem);
-          el += content;
-        } 
-        else if(contentItem.type === 'image') {
-          el += `<img src="${contentItem.attrs.src}" alt="${contentItem.attrs.alt}"></img>`
-        } else {
-          return '';
-        }
-      })
-      return el
-    }
   }
 
   // Steps:

@@ -1,19 +1,11 @@
 
 <template>
+<!-- @ TODO: Remove this div  -->
   <div>
     <ul>
       <template v-for="(obj, index) in blurb.content">
 
-
-        <!-- Maybe we can lump:
-            - paragraph
-            - heading
-            - bullet list
-            - ordered list
-            - blockquote 
-
-          ... together -->
-
+        <!-- Headings and paragraphs -->
         <template v-if="containsText(obj.type)">
           <rich-text-parser 
             :contentObj="obj" 
@@ -21,9 +13,14 @@
           </rich-text-parser>          
         </template>
 
-        <template v-else-if="obj.type === 'heading'">
-          <template v-html="determineHeading(obj)"></template>
-        </template>
+        <!-- List item -->
+      <template v-else-if="isList(obj.type)">
+          <rich-list-parser :listObj="obj" :key="index"></rich-list-parser>
+      </template>
+
+      <hr v-else-if="obj.type === 'horizontal_rule'" :key="index"/>
+
+      <!-- @TODO: Code blocks and Block quotes    -->
 
         <!-- <template v-if="obj.type === 'code_block'">
           <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
@@ -41,9 +38,9 @@
           <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
         </template>
 
-        <template v-else-if="obj.type === 'horizontal_rule'">
-          <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
-        </template>
+        
+
+    
 
         <template v-else-if="obj.type === 'blok'">
           <rich-text-paragraph :content="obj.content" :key="index"></rich-text-paragraph>
@@ -78,17 +75,16 @@ export default {
 
     containsText(textType) {
       // Maybe we can lump paragraph, heading, bullet list, ordered list, and blok quote together 
-      return textType === 'paragraph' || textType === 'heading' || textType === 'code_block' || textType === 'bullet_list' || textType === 'ordered_list' || textType === 'blockquote'
+      return textType === 'paragraph' || textType === 'heading' || textType === 'code_block' || textType === 'blockquote'
     },
 
-    determineHeading(obj) {
-      // @TODO: Going to need to handle scenario where heading has marks on it... might need to abstract that out from
-      // the paragraph parser component
-      // <!-- { "type": "heading", "attrs": { "level": 1 }, "content": [ { "text": "this is a heading", "type": "text" } ] } -->
-      const level = obj.attrs.level
-      const heading = `<h${level}></h${level}>`
-      return heading
-    }
+    isList(type) {
+      return type === 'ordered_list' || type === 'bullet_list';
+    },
+
+  
+
+  
   }
 
 

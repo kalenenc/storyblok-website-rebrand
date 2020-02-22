@@ -33,6 +33,7 @@ export default {
 
     this.setMarkedText();
 
+    // @TODO: refactor with a callback or closure or something
     if (this.isStrikeAndLink) {
       return createElement(
       this.elementType, //strike
@@ -48,6 +49,10 @@ export default {
         ]
       )
     } else {
+      if(this.elementType === 'strike') {
+        console.log('is Strike')
+        console.log('this.classStr', this.classStr)
+      }
       return createElement(
       this.elementType, //strike
       {
@@ -62,14 +67,17 @@ export default {
     )
     }
     
-
-   
   },
 
   methods: {
     parseMarks() {
       let classArr = [];
       let linkHref, isCode, isStrike;
+
+      // Apparently, bold, strike, underline, and italic don't all work together
+      // you need to add a span inside of the <strike> and apply the CSS classes
+      // to the span in order for all to work. don't ask me why
+      // https://codepen.io/kalenenc/pen/dyoOgxx
 
       this.$props.marksArray.forEach((mark) => {
         switch(mark.type) {
@@ -106,6 +114,7 @@ export default {
         this.classStr = `${markObj.classStr}`;
       } else if(markObj.isStrike) {
         this.elementType = 'strike';
+        this.classStr = `${markObj.classStr}`;
       } else if(this.linkHref) {
         this.elementType = 'a';
         this.classStr = `${markObj.classStr}`;
